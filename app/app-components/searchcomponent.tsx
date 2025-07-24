@@ -21,33 +21,13 @@ import {
 import { RecordShape } from "neo4j-driver";
 import { fetchNames } from "../neo4j/utils";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
-type SearchComponentProps = {};
-const SearchComponent = () => {
+type SearchComponentProps = {
+  personKey?: string;
+  setPersonKey?: React.Dispatch<React.SetStateAction<string>>;
+};
+const SearchComponent = ({ personKey, setPersonKey }: SearchComponentProps) => {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [personKey, setPersonKey] = React.useState<string>("");
+  // const [personKey, setPersonKey] = React.useState<string>("");
   const [personName, setPersonName] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [nameList, setNameList] = React.useState<RecordShape[] | undefined>([]);
@@ -64,10 +44,10 @@ const SearchComponent = () => {
     try {
       setIsLoading(true);
       if (val !== "" && val.length > 2) {
-        console.log("val:", val);
+        // console.log("val:", val);
         const result = await fetchNames(val);
         // console.log("names list: ", result, typeof result);
-        setNameList(result);
+        if (result) setNameList(result);
       }
     } catch (error) {
       console.error("fetching names error", error);
@@ -117,9 +97,11 @@ const SearchComponent = () => {
                   key={personObject.id}
                   value={personObject.id}
                   onSelect={(currentValue) => {
-                    setPersonKey(
-                      currentValue === personKey ? "" : currentValue
-                    );
+                    if (setPersonKey) {
+                      setPersonKey(
+                        currentValue === personKey ? "" : currentValue
+                      );
+                    }
                     setOpen(false);
                   }}
                 >

@@ -23,7 +23,7 @@ let driver: any;
 export async function fetchNames(name: string) {
   try {
     driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
-    const serverInfo = await driver.getServerInfo();
+    // const serverInfo = await driver.getServerInfo();
     // console.log("Connection Established");
   } catch (error: any) {
     console.error(`Connection Error:\n${error}`);
@@ -32,7 +32,7 @@ export async function fetchNames(name: string) {
   const session = driver.session();
   try {
     const query = queries.getFetchNameQuery(name);
-    console.log("query: ", query);
+    // console.log("query: ", query);
     const result = await session.run(query);
     return result.records.map((record: any) => record.toObject());
   } catch (error) {
@@ -41,4 +41,29 @@ export async function fetchNames(name: string) {
     await session.close();
     await driver.close();
   }
+  return null;
+}
+
+
+// ===================================== function to return the relationship data ===================================
+export async function fetchData(fromPersonKey: string, toPersonKey: string) {
+  try {
+    driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
+    // const serverInfo = await driver.getServerInfo();
+    // console.log("Connection Established");
+  } catch (error: any) {
+    console.error(`Connection Error:\n${error}`);
+  }
+  const session = driver.session();
+  try {
+    const query = queries.getRelationshipQuery(fromPersonKey, toPersonKey);
+    const result = await session.run(query);
+    return result.records.map((record: any) => record.toObject());
+  } catch (error) {
+    console.log("fetchdata error: ", error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
+  return null;
 }
