@@ -67,3 +67,26 @@ export async function fetchData(fromPersonKey: string, toPersonKey: string) {
   }
   return null;
 }
+
+//======================================== function to retun recently added person nodes =======================================
+export async function fetchRecentlyAddedNodes(){
+  try {
+    driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
+    // const serverInfo = await driver.getServerInfo();
+    // console.log("Connection Established");
+  } catch (error: any) {
+    console.error(`Connection Error:\n${error}`);
+  }
+  const session = driver.session();
+  try {
+    const query = queries.getRecentlyAddedNodesQuery();
+    const result = await session.run(query);
+    return result.records.map((record: any) => record.toObject());
+  } catch (error) {
+    console.log("fetchdata error: ", error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
+  return null;
+}

@@ -1,44 +1,10 @@
-// "use client";
-// import React, { useState } from "react";
-import { Search, UserCog } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import IconButton from "../app-components/iconbutton";
-import SearchPage from "./search/page";
 import DataPortal from "./dataportal/page";
+import LandingPage from "./landing";
 
-type MainProps = {
-  childern?: React.ReactNode;
-};
-
-const Main = ({ childern }: MainProps) => {
-  // const [isDataPortal, setIsDataPortal] = useState<boolean>(false);
+export default async function Main() {
   return (
-    <>
-      <div className="min-h-screen bg-amber-500 flex">
-        <div className="w-16 bg-amber-800 min-h-screen flex flex-col gap-3 items-center p-4">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="size-12 hover:cursor-pointer"
-            // onClick={() => setIsDataPortal(false)}
-          >
-            <Search />
-          </Button>
-          <Button
-            variant="secondary"
-            size="lg"
-            className="size-12 hover:cursor-pointer"
-            // onClick={() => setIsDataPortal(true)}
-          >
-            <UserCog />
-          </Button>
-        </div>
-        <div className="bg-green-400 grow">
-          <SearchPage />
-          <DataPortal />
-        </div>
-      </div>
-    </>
+    <LandingPage>
+      <DataPortal />
+    </LandingPage>
   );
-};
-export default Main;
+}
