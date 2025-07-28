@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RecordShape } from "neo4j-driver";
-import { fetchNames } from "../neo4j/utils";
+import { fetchNames } from "../../lib/neo4j/utils";
 
 type SearchComponentProps = {
   personKey?: string;

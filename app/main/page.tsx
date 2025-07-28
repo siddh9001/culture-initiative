@@ -1,15 +1,17 @@
-"use client";
-import React, { useState } from "react";
+// "use client";
+// import React, { useState } from "react";
 import { Search, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import IconButton from "../app-components/iconbutton";
 import SearchPage from "./search/page";
 import DataPortal from "./dataportal/page";
 
-type Props = {};
+type MainProps = {
+  childern?: React.ReactNode;
+};
 
-const Main = (props: Props) => {
-  const [isDataPortal, setIsDataPortal] = useState<boolean>(false);
+const Main = ({ childern }: MainProps) => {
+  // const [isDataPortal, setIsDataPortal] = useState<boolean>(false);
   return (
     <>
       <div className="min-h-screen bg-amber-500 flex">
@@ -18,7 +20,7 @@ const Main = (props: Props) => {
             variant="secondary"
             size="lg"
             className="size-12 hover:cursor-pointer"
-            onClick={() => setIsDataPortal(false)}
+            // onClick={() => setIsDataPortal(false)}
           >
             <Search />
           </Button>
@@ -26,7 +28,7 @@ const Main = (props: Props) => {
             variant="secondary"
             size="lg"
             className="size-12 hover:cursor-pointer"
-            onClick={() => setIsDataPortal(true)}
+            // onClick={() => setIsDataPortal(true)}
           >
             <UserCog />
           </Button>

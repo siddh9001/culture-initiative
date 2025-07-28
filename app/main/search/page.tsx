@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import SearchComponent from "@/app/app-components/searchcomponent";
 import { Button } from "@/components/ui/button";
-import { fetchData } from "@/app/neo4j/utils";
+import { fetchData } from "@/lib/neo4j/utils";
 
 type SearchPageProps = {};
 const SearchPage = () => {
