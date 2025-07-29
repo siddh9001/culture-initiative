@@ -2,14 +2,14 @@
 import React, { useState } from "react";
 import { Search, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import IconButton from "../app-components/iconbutton";
 import SearchPage from "./search/page";
+import DataPortal from "./dataportal/page";
 
 type MainProps = {
   children?: React.ReactNode;
 };
 
-const LandingPage = ({ children }: MainProps) => {
+const LandingPage = () => {
   const [isDataPortal, setIsDataPortal] = useState<boolean>(false);
   return (
     <>
@@ -32,10 +32,10 @@ const LandingPage = ({ children }: MainProps) => {
             <UserCog />
           </Button>
         </div>
-        <div className="bg-green-400 grow">
+        <div className="bg-gray-900 grow">
           <SearchPage />
           {/* <DataPortal /> */}
-          {isDataPortal && children}
+          {/* {isDataPortal && children} */}
         </div>
       </div>
     </>

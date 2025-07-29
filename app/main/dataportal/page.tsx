@@ -1,6 +1,10 @@
+// "use client";
 import { fetchRecentlyAddedNodes } from "@/lib/neo4j/utils";
 import { columns, Payment } from "./columns";
 import { DataTable } from "./data-table";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -48,10 +52,41 @@ async function getData(): Promise<Payment[]> {
 }
 
 export default async function DataPortal() {
-  const data = await getData();
+  let data = await getData();
+  // const [filterName, setFilterName] = useState<string | undefined>("");
+  // const [isLoading, setIsloading] = useState<boolean>(false);
+
+  const onfilterNameSearch = async () => {
+    try {
+      // setIsloading(true);
+      data = await getData();
+    } catch (error) {
+      console.error("fetchError:", error);
+    } finally {
+      // setIsloading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto py-10">
+      <div className="flex items-center py-4 gap-2">
+        <Input
+          placeholder="Type Name here..."
+          className="max-w-sm"
+          // value={filterName}
+          // onChange={(e) => setFilterName(e.target.value)}
+        />
+        <Button
+          // className={`px-2 bg-gray-400 text-black ${
+          //   isLoading && "opacity-[0.2] disabled:pointer-events-none"
+          // }`}
+          className="px-2 bg-gray-400 text-black"
+          onClick={onfilterNameSearch}
+        >
+          {/* {isLoading ? "Search" : "Searching..."} */}
+          Search
+        </Button>
+      </div>
       <DataTable columns={columns} data={data} />
     </div>
   );

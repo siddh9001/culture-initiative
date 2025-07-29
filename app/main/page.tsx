@@ -1,10 +1,6 @@
-import DataPortal from "./dataportal/page";
+"use client";
 import LandingPage from "./landing";
 
 export default async function Main() {
-  return (
-    <LandingPage>
-      <DataPortal />
-    </LandingPage>
-  );
+  return <LandingPage />;
 }
