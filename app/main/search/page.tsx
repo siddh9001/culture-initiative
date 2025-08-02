@@ -35,7 +35,12 @@ const SearchPage = () => {
         setPersonKey={setFromPersonKey}
       />
       <SearchComponent personKey={toPersonKey} setPersonKey={setToPersonKey} />
-      <Button className="w-40" onClick={onClickSearch}>
+      <Button
+        className={`px-2 w-40 ${
+          isLoading && "opacity-[0.7] disabled:pointer-events-none"
+        }`}
+        onClick={onClickSearch}
+      >
         {isLoading ? "Searching..." : "Search"}
       </Button>
     </div>

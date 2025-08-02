@@ -1,10 +1,11 @@
-// "use client";
-import { fetchRecentlyAddedNodes } from "@/lib/neo4j/utils";
+"use client";
+import { fetchData, fetchRecentlyAddedNodes } from "@/lib/neo4j/utils";
 import { columns, Payment } from "./columns";
 import { DataTable } from "./data-table";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import SearchComponent from "@/app/app-components/searchcomponent";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -47,44 +48,56 @@ async function getData(): Promise<Payment[]> {
   //   },
   // ];
   const neo4jdata = await fetchRecentlyAddedNodes();
-  console.log("neo4jdata:", neo4jdata);
+  // console.log("neo4jdata:", neo4jdata);
   return neo4jdata;
 }
 
-export default async function DataPortal() {
-  let data = await getData();
+export default function DataPortal() {
+  // let data = await getData();
   // const [filterName, setFilterName] = useState<string | undefined>("");
-  // const [isLoading, setIsloading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [data, setData] = useState<Payment[]>([]);
+  const [personKey, setPersonKey] = useState<string>("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let dat = await getData();
+      setData(dat);
+    };
+    fetchData();
+  }, []);
 
   const onfilterNameSearch = async () => {
     try {
-      // setIsloading(true);
-      data = await getData();
+      setIsLoading(true);
+      if (personKey !== "") {
+        const data = await fetchData(personKey);
+        // console.log("filterdata: ", data);
+        setData(data);
+        setPersonKey("");
+      } else {
+        throw new Error("Both Person required !");
+      }
     } catch (error) {
-      console.error("fetchError:", error);
+      console.error(error);
     } finally {
-      // setIsloading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center py-4 gap-2">
-        <Input
-          placeholder="Type Name here..."
-          className="max-w-sm"
-          // value={filterName}
-          // onChange={(e) => setFilterName(e.target.value)}
-        />
+        <SearchComponent personKey={personKey} setPersonKey={setPersonKey} />
         <Button
-          // className={`px-2 bg-gray-400 text-black ${
-          //   isLoading && "opacity-[0.2] disabled:pointer-events-none"
-          // }`}
-          className="px-2 bg-gray-400 text-black"
+          className={`px-2 w-40 ${
+            isLoading && "opacity-[0.7] disabled:pointer-events-none"
+          }`}
+          // className="px-2 bg-gray-400 text-black"
           onClick={onfilterNameSearch}
         >
-          {/* {isLoading ? "Search" : "Searching..."} */}
-          Search
+          {isLoading ? "Searching..." : "Search"}
+          {/* Search */}
         </Button>
       </div>
       <DataTable columns={columns} data={data} />

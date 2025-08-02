@@ -34,7 +34,7 @@ const LandingPage = () => {
         </div>
         <div className="bg-gray-900 grow">
           <SearchPage />
-          {/* <DataPortal /> */}
+          <DataPortal />
           {/* {isDataPortal && children} */}
         </div>
       </div>

@@ -44,9 +44,8 @@ export async function fetchNames(name: string) {
   return null;
 }
 
-
 // ===================================== function to return the relationship data ===================================
-export async function fetchData(fromPersonKey: string, toPersonKey: string) {
+export async function fetchData(fromPersonKey: string, toPersonKey?: string) {
   try {
     driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
     // const serverInfo = await driver.getServerInfo();
@@ -56,7 +55,13 @@ export async function fetchData(fromPersonKey: string, toPersonKey: string) {
   }
   const session = driver.session();
   try {
-    const query = queries.getRelationshipQuery(fromPersonKey, toPersonKey);
+    let query;
+    if (toPersonKey !== undefined) {
+      query = queries.getRelationshipQuery(fromPersonKey, toPersonKey);
+    } else {
+      query = queries.getFilterByIdQuery(fromPersonKey);
+    }
+    // console.log(query);
     const result = await session.run(query);
     return result.records.map((record: any) => record.toObject());
   } catch (error) {
@@ -69,7 +74,7 @@ export async function fetchData(fromPersonKey: string, toPersonKey: string) {
 }
 
 //======================================== function to retun recently added person nodes =======================================
-export async function fetchRecentlyAddedNodes(){
+export async function fetchRecentlyAddedNodes() {
   try {
     driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
     // const serverInfo = await driver.getServerInfo();
