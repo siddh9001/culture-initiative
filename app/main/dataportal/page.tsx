@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SearchComponent from "@/app/app-components/searchcomponent";
+import ButtonGroup from "@/app/app-components/buttongroup";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -58,6 +59,9 @@ export default function DataPortal() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<Payment[]>([]);
   const [personKey, setPersonKey] = useState<string>("");
+  const [enableNewButton, setEnableNewButton] = useState<boolean>(true);
+  const [enableUpdateButton, setEnableUpdateButton] = useState<boolean>(false);
+  const [enableDeleteButton, setEnableDeleteButton] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,7 +90,7 @@ export default function DataPortal() {
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto p-4">
       <div className="flex items-center py-4 gap-2">
         <SearchComponent personKey={personKey} setPersonKey={setPersonKey} />
         <Button
@@ -99,6 +103,11 @@ export default function DataPortal() {
           {isLoading ? "Searching..." : "Search"}
           {/* Search */}
         </Button>
+        <ButtonGroup
+          enableNewButton={enableNewButton}
+          enableUpdateButton={enableUpdateButton}
+          enableDeleteButton={enableDeleteButton}
+        />
       </div>
       <DataTable columns={columns} data={data} />
     </div>
