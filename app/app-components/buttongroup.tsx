@@ -6,18 +6,20 @@ type ButtonGroupProps = {
   enableUpdateButton: boolean;
   enableDeleteButton: boolean;
   enableNewButton: boolean;
+  onNewClick?: () => void; // add prop
 };
 
 export default function ButtonGroup({
   enableUpdateButton,
   enableDeleteButton,
   enableNewButton,
+  onNewClick, // receive prop
 }: ButtonGroupProps) {
   return (
     <div className="flex justify-evenly items-center gap-2 ml-auto">
       <Button
         className="cusror-pointer disabled:opacity-70"
-        onClick={() => console.log("new button")}
+        onClick={onNewClick ? onNewClick : () => console.log("new button")}
         disabled={!enableNewButton}
       >
         + New

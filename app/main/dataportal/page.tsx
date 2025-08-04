@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SearchComponent from "@/app/app-components/searchcomponent";
 import ButtonGroup from "@/app/app-components/buttongroup";
+import DataForm from "@/app/app-components/dataform"; // import DataForm
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -62,6 +63,7 @@ export default function DataPortal() {
   const [enableNewButton, setEnableNewButton] = useState<boolean>(true);
   const [enableUpdateButton, setEnableUpdateButton] = useState<boolean>(false);
   const [enableDeleteButton, setEnableDeleteButton] = useState<boolean>(false);
+  const [showDataForm, setShowDataForm] = useState<boolean>(false); // add state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,27 +91,47 @@ export default function DataPortal() {
     }
   };
 
+  // Handler for "+ New" button
+  const handleNewClick = () => {
+    setShowDataForm(true);
+  };
+
+  // Handler for Cancel button in DataForm
+  const handleCancel = () => {
+    setShowDataForm(false);
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <div className="flex items-center py-4 gap-2">
-        <SearchComponent personKey={personKey} setPersonKey={setPersonKey} />
-        <Button
-          className={`px-2 w-40 ${
-            isLoading && "opacity-[0.7] disabled:pointer-events-none"
-          }`}
-          // className="px-2 bg-gray-400 text-black"
-          onClick={onfilterNameSearch}
-        >
-          {isLoading ? "Searching..." : "Search"}
-          {/* Search */}
-        </Button>
-        <ButtonGroup
-          enableNewButton={enableNewButton}
-          enableUpdateButton={enableUpdateButton}
-          enableDeleteButton={enableDeleteButton}
-        />
-      </div>
-      <DataTable columns={columns} data={data} />
+      {showDataForm ? (
+        <DataForm onCancel={handleCancel} />
+      ) : (
+        <>
+          <div className="flex items-center py-4 gap-2">
+            <SearchComponent
+              personKey={personKey}
+              setPersonKey={setPersonKey}
+            />
+            <Button
+              className={`px-2 w-40 ${
+                isLoading && "opacity-[0.7] disabled:pointer-events-none"
+              }`}
+              // className="px-2 bg-gray-400 text-black"
+              onClick={onfilterNameSearch}
+            >
+              {isLoading ? "Searching..." : "Search"}
+              {/* Search */}
+            </Button>
+            <ButtonGroup
+              enableNewButton={enableNewButton}
+              enableUpdateButton={enableUpdateButton}
+              enableDeleteButton={enableDeleteButton}
+              onNewClick={handleNewClick} // pass handler
+            />
+          </div>
+          <DataTable columns={columns} data={data} />
+        </>
+      )}
     </div>
   );
 }
