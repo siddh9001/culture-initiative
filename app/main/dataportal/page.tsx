@@ -118,6 +118,7 @@ export default function DataPortal() {
               }`}
               // className="px-2 bg-gray-400 text-black"
               onClick={onfilterNameSearch}
+              disabled={isLoading}
             >
               {isLoading ? "Searching..." : "Search"}
               {/* Search */}

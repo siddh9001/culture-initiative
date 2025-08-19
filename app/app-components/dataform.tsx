@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { insertNewNode } from "@/lib/neo4j/utils";
 
 const formSchema = z.object({
   person_name: z.string().min(3).max(40),
@@ -75,6 +76,7 @@ export default function DataForm({ onCancel }: DataFormProps) {
 
       // Add your API call here
       console.log(dataWithId); // You need to implement this function
+      insertNewNode(dataWithId);
 
       form.reset(); // Reset form after successful submission
       onCancel?.(); // Close form if needed

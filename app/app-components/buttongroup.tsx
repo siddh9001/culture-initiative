@@ -7,6 +7,8 @@ type ButtonGroupProps = {
   enableDeleteButton: boolean;
   enableNewButton: boolean;
   onNewClick?: () => void; // add prop
+  onUpdateClick?: () => void; // add prop
+  onDeleteClick?: () => void; // add prop
 };
 
 export default function ButtonGroup({
@@ -18,21 +20,21 @@ export default function ButtonGroup({
   return (
     <div className="flex justify-evenly items-center gap-2 ml-auto">
       <Button
-        className="cusror-pointer disabled:opacity-70"
+        className="cusror-pointer"
         onClick={onNewClick ? onNewClick : () => console.log("new button")}
         disabled={!enableNewButton}
       >
         + New
       </Button>
       <Button
-        className="cusror-pointer disabled:opacity-70"
+        className="cusror-pointer"
         onClick={() => console.log("update button")}
         disabled={!enableUpdateButton}
       >
         Update
       </Button>
       <Button
-        className="cusror-pointer disabled:opacity-70"
+        className="cusror-pointer"
         onClick={() => console.log("del button")}
         disabled={!enableDeleteButton}
       >

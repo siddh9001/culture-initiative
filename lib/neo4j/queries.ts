@@ -10,4 +10,5 @@ export const queries = {
   `,
   getRecentlyAddedNodesQuery: () => `MATCH (p:Person) RETURN p.person_id AS id, p.person_name AS person_name, p.person_surname AS person_surname ORDER BY p.updated_at DESC LIMIT 5`,
   getFilterByIdQuery: (personKey: string) => `MATCH (p:Person) WHERE p.person_id = '${personKey}' RETURN p.person_id AS id, p.person_name AS person_name, p.person_surname AS person_surname`,
+  getInsertNewNodeQuery: (personObj: Object) => `CREATE (p:Person ${JSON.stringify(personObj)}) return p`,
 };
