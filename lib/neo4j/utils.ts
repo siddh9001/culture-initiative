@@ -96,7 +96,7 @@ export async function fetchRecentlyAddedNodes() {
   return null;
 }
 
-//============================================ function to inser new node ==========================================
+//============================================ function to insert new node ==========================================
 export async function insertNewNode(nodeObj:Object) {
   try {
     driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
@@ -119,4 +119,32 @@ export async function insertNewNode(nodeObj:Object) {
     await driver.close();
   }
   return null;
+}
+
+
+//========================================== funtion to update the exisiting node =================================
+export async function updateNode(nodeObj:Object) {
+  try {
+    driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
+    // const serverInfo = await driver.getServerInfo();
+    // console.log("Connection Established");
+  } catch (error: any) {
+    console.error(`Connection Error:\n${error}`);
+  }
+  const session = driver.session();
+
+  try {
+    const query = queries.getUpdateNodeQuery(nodeObj);
+    console.log("query:", query);
+    const result = await session.run(query);
+    console.log(result);
+    // return result.records.map((record: any) => record.toObject());
+  } catch (error) {
+    console.log("fetchdata error: ", error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
+  return null;
+  
 }

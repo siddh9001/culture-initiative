@@ -64,6 +64,7 @@ export default function DataPortal() {
   const [enableUpdateButton, setEnableUpdateButton] = useState<boolean>(false);
   const [enableDeleteButton, setEnableDeleteButton] = useState<boolean>(false);
   const [showDataForm, setShowDataForm] = useState<boolean>(false); // add state
+  const [isUpdateForm, setIsUpdateForm] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,10 +102,18 @@ export default function DataPortal() {
     setShowDataForm(false);
   };
 
+  const handleUpdateClick = () => {
+    setIsUpdateForm(true);
+  };
+
+  const handleUpdateCancel = () => {
+    setIsUpdateForm(false);
+  };
+
   return (
     <div className="container mx-auto p-4">
       {showDataForm ? (
-        <DataForm onCancel={handleCancel} />
+        <DataForm onCancel={handleCancel} isUpdateClicked={isUpdateForm} />
       ) : (
         <>
           <div className="flex items-center py-4 gap-2">

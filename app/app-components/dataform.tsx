@@ -36,6 +36,7 @@ const formSchema = z.object({
 
 type DataFormProps = {
   onCancel?: () => void;
+  isUpdateClicked?: boolean;
 };
 
 export default function DataForm({ onCancel }: DataFormProps) {
