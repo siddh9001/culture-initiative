@@ -37,25 +37,43 @@ const formSchema = z.object({
 type DataFormProps = {
   onCancel?: () => void;
   isUpdateClicked?: boolean;
+  personObj?: any;
 };
 
-export default function DataForm({ onCancel }: DataFormProps) {
+export default function DataForm({
+  onCancel,
+  isUpdateClicked,
+  personObj,
+}: DataFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      person_name: "",
-      person_surname: "",
-      person_dob: "",
-      person_birth_place: "",
-      person_modified_name: "",
-      person_gender: "M",
-      person_marrige_status: "URD",
-      person_D_A_status: "A",
-      person_sasuraal: "",
-      person_mayka: "",
-    },
+    defaultValues: isUpdateClicked
+      ? {
+          person_name: "",
+          person_surname: "",
+          person_dob: "",
+          person_birth_place: "",
+          person_modified_name: "",
+          person_gender: "M",
+          person_marrige_status: "URD",
+          person_D_A_status: "A",
+          person_sasuraal: "",
+          person_mayka: "",
+        }
+      : {
+          person_name: "",
+          person_surname: "",
+          person_dob: "",
+          person_birth_place: "",
+          person_modified_name: "",
+          person_gender: "M",
+          person_marrige_status: "URD",
+          person_D_A_status: "A",
+          person_sasuraal: "",
+          person_mayka: "",
+        },
   });
 
   // Function to generate a 16-character alphanumeric ID
