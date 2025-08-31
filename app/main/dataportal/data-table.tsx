@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
   setEnableUpdateButton?: React.Dispatch<React.SetStateAction<boolean>>;
   enableDeleteButton?: boolean;
   setEnableDeleteButton?: React.Dispatch<React.SetStateAction<boolean>>;
+  setPersonKeySelectedForUpdate?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function DataTable<TData, TValue>({
@@ -35,6 +36,7 @@ export function DataTable<TData, TValue>({
   setEnableUpdateButton,
   enableDeleteButton,
   setEnableDeleteButton,
+  setPersonKeySelectedForUpdate,
 }: DataTableProps<TData, TValue>) {
   const [filterName, setFilterName] = useState<string>("");
   const [rowSelection, setRowSelection] = useState({});
@@ -54,20 +56,29 @@ export function DataTable<TData, TValue>({
     if (
       selectedRowLength == 1 &&
       setEnableUpdateButton &&
-      setEnableDeleteButton
+      setEnableDeleteButton &&
+      setPersonKeySelectedForUpdate
     ) {
       setEnableUpdateButton(true);
       setEnableDeleteButton(true);
+      setPersonKeySelectedForUpdate(Object.keys(rowSelection)[0]);
     } else if (
       selectedRowLength > 1 &&
       setEnableUpdateButton &&
-      setEnableDeleteButton
+      setEnableDeleteButton &&
+      setPersonKeySelectedForUpdate
     ) {
       setEnableDeleteButton(true);
       setEnableUpdateButton(false);
-    } else if (setEnableUpdateButton && setEnableDeleteButton) {
+      setPersonKeySelectedForUpdate("");
+    } else if (
+      setEnableUpdateButton &&
+      setEnableDeleteButton &&
+      setPersonKeySelectedForUpdate
+    ) {
       setEnableUpdateButton(false);
       setEnableDeleteButton(false);
+      setPersonKeySelectedForUpdate("");
     }
   }, [rowSelection]);
 

@@ -1,5 +1,9 @@
 "use client";
-import { fetchData, fetchRecentlyAddedNodes } from "@/lib/neo4j/utils";
+import {
+  fetchData,
+  fetchRecentlyAddedNodes,
+  fetchNodeData,
+} from "@/lib/neo4j/utils";
 import { columns, Payment } from "./columns";
 import { DataTable } from "./data-table";
 import { useEffect, useState } from "react";
@@ -8,20 +12,7 @@ import { Button } from "@/components/ui/button";
 import SearchComponent from "@/app/app-components/searchcomponent";
 import ButtonGroup from "@/app/app-components/buttongroup";
 import DataForm from "@/app/app-components/dataform"; // import DataForm
-
-interface PersonNode {
-  person_id: string;
-  person_name: string;
-  person_surname: string;
-  person_dob: string;
-  person_birth_place: string;
-  person_modified_name: string;
-  person_gender: "M" | "F";
-  person_marrige_status: "MRD" | "URD";
-  person_D_A_status: "D" | "A";
-  person_sasuraal: string;
-  person_mayka: string;
-}
+import { PersonNode } from "@/types/types";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -79,7 +70,11 @@ export default function DataPortal() {
   const [enableDeleteButton, setEnableDeleteButton] = useState<boolean>(false);
   const [showDataForm, setShowDataForm] = useState<boolean>(false); // add state
   const [isUpdateForm, setIsUpdateForm] = useState<boolean>(false);
-  const [personObj, setPersonObj] = useState<PersonNode | null>(null); // modified state with PersonNode type
+  const [personObj, setPersonObj] = useState<PersonNode | null | undefined>(
+    null
+  ); // modified state with PersonNode type
+  const [personKeySelectedForUpdate, setPersonKeySelectedForUpdate] =
+    useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,9 +112,13 @@ export default function DataPortal() {
     setShowDataForm(false);
   };
 
-  const handleUpdateClick = () => {
-    setIsUpdateForm(true);
-    setShowDataForm(true);
+  const handleUpdateClick = async () => {
+    if (personKeySelectedForUpdate !== "") {
+      var obj = await fetchNodeData(personKeySelectedForUpdate);
+      setPersonObj(obj);
+      setIsUpdateForm(true);
+      setShowDataForm(true);
+    }
   };
 
   const handleUpdateCancel = () => {
@@ -130,7 +129,11 @@ export default function DataPortal() {
   return (
     <div className="container mx-auto p-4">
       {showDataForm ? (
-        <DataForm onCancel={handleCancel} isUpdateForm={isUpdateForm} />
+        <DataForm
+          onCancel={handleCancel}
+          isUpdateForm={isUpdateForm}
+          personObj={personObj}
+        />
       ) : (
         <>
           <div className="flex items-center py-4 gap-2">
@@ -164,6 +167,7 @@ export default function DataPortal() {
             setEnableUpdateButton={setEnableUpdateButton}
             enableDeleteButton={enableDeleteButton}
             setEnableDeleteButton={setEnableDeleteButton}
+            setPersonKeySelectedForUpdate={setPersonKeySelectedForUpdate}
           />
         </>
       )}

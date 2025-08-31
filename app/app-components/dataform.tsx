@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { insertNewNode, updateNode } from "@/lib/neo4j/utils";
+import { PersonNode } from "@/types/types";
 
 const formSchema = z.object({
   person_name: z.string().min(3).max(40),
@@ -37,7 +38,7 @@ const formSchema = z.object({
 type DataFormProps = {
   onCancel?: () => void;
   isUpdateForm?: boolean;
-  personObj?: any;
+  personObj?: PersonNode | null;
 };
 
 export default function DataForm({
@@ -49,31 +50,32 @@ export default function DataForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: isUpdateForm
-      ? {
-          person_name: "demo",
-          person_surname: "name",
-          person_dob: "",
-          person_birth_place: "",
-          person_modified_name: "",
-          person_gender: "M",
-          person_marrige_status: "URD",
-          person_D_A_status: "A",
-          person_sasuraal: "",
-          person_mayka: "",
-        }
-      : {
-          person_name: "",
-          person_surname: "",
-          person_dob: "",
-          person_birth_place: "",
-          person_modified_name: "",
-          person_gender: "M",
-          person_marrige_status: "URD",
-          person_D_A_status: "A",
-          person_sasuraal: "",
-          person_mayka: "",
-        },
+    defaultValues:
+      isUpdateForm && personObj
+        ? {
+            person_name: personObj.person_name || "",
+            person_surname: personObj.person_surname || "",
+            person_dob: personObj.person_dob || "",
+            person_birth_place: personObj.person_birth_place || "",
+            person_modified_name: personObj.person_modified_name || "",
+            person_gender: personObj.person_gender || "M",
+            person_marrige_status: personObj.person_marrige_status || "URD",
+            person_D_A_status: personObj.person_D_A_status || "A",
+            person_sasuraal: personObj.person_sasuraal || "",
+            person_mayka: personObj.person_mayka || "",
+          }
+        : {
+            person_name: "",
+            person_surname: "",
+            person_dob: "",
+            person_birth_place: "",
+            person_modified_name: "",
+            person_gender: "M",
+            person_marrige_status: "URD",
+            person_D_A_status: "A",
+            person_sasuraal: "",
+            person_mayka: "",
+          },
   });
 
   // Function to generate a 16-character alphanumeric ID
@@ -88,10 +90,17 @@ export default function DataForm({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    let dataWithId;
     try {
       setIsSubmitting(true);
-      const person_id = generatePersonId();
-      const dataWithId = { ...values, person_id };
+
+      if (!isUpdateForm) {
+        const person_id = generatePersonId();
+        dataWithId = { ...values, person_id };
+      } else {
+        const person_id = personObj?.person_id;
+        dataWithId = { ...values, person_id };
+      }
 
       // Add your API call here
       console.log(dataWithId); // You need to implement this function
