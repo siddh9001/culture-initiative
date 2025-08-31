@@ -16,25 +16,26 @@ export default function ButtonGroup({
   enableDeleteButton,
   enableNewButton,
   onNewClick, // receive prop
+  onUpdateClick,
+  onDeleteClick,
 }: ButtonGroupProps) {
   return (
     <div className="flex justify-evenly items-center gap-2 ml-auto">
       <Button
-        className="cusror-pointer"
         onClick={onNewClick ? onNewClick : () => console.log("new button")}
         disabled={!enableNewButton}
       >
         + New
       </Button>
       <Button
-        className="cusror-pointer"
-        onClick={() => console.log("update button")}
+        onClick={
+          onUpdateClick ? onUpdateClick : () => console.log("update button")
+        }
         disabled={!enableUpdateButton}
       >
         Update
       </Button>
       <Button
-        className="cusror-pointer"
         onClick={() => console.log("del button")}
         disabled={!enableDeleteButton}
       >

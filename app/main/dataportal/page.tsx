@@ -9,6 +9,20 @@ import SearchComponent from "@/app/app-components/searchcomponent";
 import ButtonGroup from "@/app/app-components/buttongroup";
 import DataForm from "@/app/app-components/dataform"; // import DataForm
 
+interface PersonNode {
+  person_id: string;
+  person_name: string;
+  person_surname: string;
+  person_dob: string;
+  person_birth_place: string;
+  person_modified_name: string;
+  person_gender: "M" | "F";
+  person_marrige_status: "MRD" | "URD";
+  person_D_A_status: "D" | "A";
+  person_sasuraal: string;
+  person_mayka: string;
+}
+
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
   // return [
@@ -65,6 +79,7 @@ export default function DataPortal() {
   const [enableDeleteButton, setEnableDeleteButton] = useState<boolean>(false);
   const [showDataForm, setShowDataForm] = useState<boolean>(false); // add state
   const [isUpdateForm, setIsUpdateForm] = useState<boolean>(false);
+  const [personObj, setPersonObj] = useState<PersonNode | null>(null); // modified state with PersonNode type
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,16 +119,18 @@ export default function DataPortal() {
 
   const handleUpdateClick = () => {
     setIsUpdateForm(true);
+    setShowDataForm(true);
   };
 
   const handleUpdateCancel = () => {
     setIsUpdateForm(false);
+    setShowDataForm(true);
   };
 
   return (
     <div className="container mx-auto p-4">
       {showDataForm ? (
-        <DataForm onCancel={handleCancel} isUpdateClicked={isUpdateForm} />
+        <DataForm onCancel={handleCancel} isUpdateForm={isUpdateForm} />
       ) : (
         <>
           <div className="flex items-center py-4 gap-2">
@@ -137,9 +154,17 @@ export default function DataPortal() {
               enableUpdateButton={enableUpdateButton}
               enableDeleteButton={enableDeleteButton}
               onNewClick={handleNewClick} // pass handler
+              onUpdateClick={handleUpdateClick}
             />
           </div>
-          <DataTable columns={columns} data={data} />
+          <DataTable
+            columns={columns}
+            data={data}
+            enableUpdateButton={enableUpdateButton}
+            setEnableUpdateButton={setEnableUpdateButton}
+            enableDeleteButton={enableDeleteButton}
+            setEnableDeleteButton={setEnableDeleteButton}
+          />
         </>
       )}
     </div>

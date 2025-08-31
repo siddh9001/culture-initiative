@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { insertNewNode } from "@/lib/neo4j/utils";
+import { insertNewNode, updateNode } from "@/lib/neo4j/utils";
 
 const formSchema = z.object({
   person_name: z.string().min(3).max(40),
@@ -36,23 +36,23 @@ const formSchema = z.object({
 
 type DataFormProps = {
   onCancel?: () => void;
-  isUpdateClicked?: boolean;
+  isUpdateForm?: boolean;
   personObj?: any;
 };
 
 export default function DataForm({
   onCancel,
-  isUpdateClicked,
+  isUpdateForm,
   personObj,
 }: DataFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: isUpdateClicked
+    defaultValues: isUpdateForm
       ? {
-          person_name: "",
-          person_surname: "",
+          person_name: "demo",
+          person_surname: "name",
           person_dob: "",
           person_birth_place: "",
           person_modified_name: "",
@@ -95,7 +95,11 @@ export default function DataForm({
 
       // Add your API call here
       console.log(dataWithId); // You need to implement this function
-      insertNewNode(dataWithId);
+      if (isUpdateForm) {
+        updateNode(dataWithId);
+      } else {
+        insertNewNode(dataWithId);
+      }
 
       form.reset(); // Reset form after successful submission
       onCancel?.(); // Close form if needed

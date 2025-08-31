@@ -17,16 +17,24 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  enableUpdateButton?: boolean;
+  setEnableUpdateButton?: React.Dispatch<React.SetStateAction<boolean>>;
+  enableDeleteButton?: boolean;
+  setEnableDeleteButton?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  enableUpdateButton,
+  setEnableUpdateButton,
+  enableDeleteButton,
+  setEnableDeleteButton,
 }: DataTableProps<TData, TValue>) {
   const [filterName, setFilterName] = useState<string>("");
   const [rowSelection, setRowSelection] = useState({});
@@ -38,8 +46,31 @@ export function DataTable<TData, TValue>({
     state: {
       rowSelection,
     },
+    getRowId: (row) => row.person_id,
   });
-  console.log("row selection: ", rowSelection);
+
+  useEffect(() => {
+    let selectedRowLength = Object.keys(rowSelection).length;
+    if (
+      selectedRowLength == 1 &&
+      setEnableUpdateButton &&
+      setEnableDeleteButton
+    ) {
+      setEnableUpdateButton(true);
+      setEnableDeleteButton(true);
+    } else if (
+      selectedRowLength > 1 &&
+      setEnableUpdateButton &&
+      setEnableDeleteButton
+    ) {
+      setEnableDeleteButton(true);
+      setEnableUpdateButton(false);
+    } else if (setEnableUpdateButton && setEnableDeleteButton) {
+      setEnableUpdateButton(false);
+      setEnableDeleteButton(false);
+    }
+  }, [rowSelection]);
+
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
@@ -64,7 +95,7 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
-              console.log("row:", row);
+              // console.log("row:", row);
               return (
                 <TableRow
                   key={row.id}

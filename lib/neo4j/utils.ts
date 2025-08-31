@@ -148,3 +148,26 @@ export async function updateNode(nodeObj:Object) {
   return null;
   
 }
+
+//========================================== function to fetch node details =================================
+export async function fetchNodeData(personId: string) {
+  try {
+    driver = neo4j.driver(neo4jUri, neo4j.auth.basic(neo4jUser, neo4jPassword));
+  } catch (error: any) {
+    console.error(`Connection Error:\n${error}`);
+  }
+  const session = driver.session();
+
+  try {
+    const query = queries.getGetAllDetailsByIdQuery(personId);
+    const result = await session.run(query);
+    // Return first record since we're querying by ID which should be unique
+    return result.records[0]?.toObject();
+  } catch (error) {
+    console.log("fetchNodeData error: ", error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
+  return null;
+}
